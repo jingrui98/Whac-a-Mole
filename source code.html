@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>打地鼠游戏</title>
+<style type="text/css">
+input[type="button"]
+{
+    background-color:lightgreen;
+	width: 100px;
+    height: 40px;
+}
+.text
+{
+	font-size:30px
+}
+.text1
+{
+	font-size:30px
+}
+.text2
+{
+	font-size:20px
+}
+
+</style>
+<script type="text/javascript">
+
+//统计得分
+var sum=0;
+//计时器全局变量
+var i = 0;
+var timer;
+//显示地鼠函数
+function init(){
+	
+	//定时器,1秒钟显示1个
+	window.setInterval("star()",1000);
+	init2();
+}
+//计时器函数
+function init2(){
+	var inputObj = document.getElementById("result");
+	inputObj.value = i+" 秒";
+	i++;
+	timer = window.setTimeout("init2()",1000);
+}
+//动画主函数
+function star()
+{
+	//创建图片节点
+	var imgObj = document.createElement("img");
+	//添加src属性
+	imgObj.setAttribute("src","04.png");
+	//添加width属性,设置地鼠大小
+	var width = 100;
+	imgObj.setAttribute("width",width);
+	//二维数组保存地洞位置
+	var hole = [[745,100],[640,140],[955,150],[475,240],[700,225],[935,220],[595,295],[790,320]];
+	//随机数函数取其中一组数据
+	var r = getRandom(0,hole.length);
+
+	var x = hole[r][0];
+	var y = hole[r][1];
+	
+	imgObj.setAttribute("style","position:absolute;left:"+x+"px;top:"+y+"px");
+
+	//添加onclick事件属性，点击地鼠消失
+	//this是系统关键字，只能在函数内使用，代表当前对象
+	imgObj.setAttribute("onclick","removeImg(this)");
+	//挂载到<body>父节点下
+	document.body.appendChild(imgObj);
+
+	if(i==21)
+	{
+		alert("游戏结束");
+	    alert("你的分数是："+sum);
+		alert("点击确定重新开始");
+		window.clearTimeout(timer);
+		//刷新后计时器从0秒开始
+		var inputObj = document.getElementById("result");
+		inputObj.value = "0 秒";
+		history.go(0);
+	}
+}
+
+//求随机数函数
+function getRandom(min,max)
+{
+	//随机数
+	var random = Math.random()*(max-min)+min;
+	//向下取整
+	random = Math.floor(random);
+	
+	return random;
+
+}
+//删除节点函数
+function removeImg(obj)
+{
+	
+	document.body.removeChild(obj);
+	//删除一个分数加1
+	sum++;
+	//尝试鼠标后跟随锤子图片，失败；尝试跟随棕色圆点代替锤子，圆点在地鼠图片下方，效果难看，失败
+}
+
+</script>
+</head>
+
+<body>
+<!--直接在div中添加图片因图片太大显示不完全，嵌套标记解决-->
+<div style="text-align:center"><img src="01.gif"></div>
+
+<!--下面文字部分-->
+<table align="center" border="0" cellpadding="5px">
+	<tr>
+		<th width="500px" colspan="3" class="text" align="left">打地鼠游戏</th>
+	</tr>
+	<tr>
+		<td class="text2" colspan="3">说明：每20秒一局游戏，游戏结束后显示分数</td>
+		
+	</tr>
+	<tr>
+		<td class="text2">游戏时间：<input id="result" class="text2"  type="text" value="0 秒"></td>
+		<td width="150px"></td>
+		<td align="center"><input class="text1" type="button" value="start" onclick="init()" /></td>
+	</tr>
+	
+</table>
+
+</body>
+</html>
